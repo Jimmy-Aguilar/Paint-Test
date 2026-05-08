@@ -20,18 +20,27 @@ void Canvas::addRectangle(float x, float y, float width, float height, Color col
     shapes.push_back(new Rectangle(x, y, width, height, color));
 }
 
+void Canvas::addPentagon(float x, float y, float radius, Color color) {
+    shapes.push_back(new Pentagon(x, y, radius, color));
+}
+
+void Canvas::addDiamond(float x, float y, float width, float height, Color color) {
+    shapes.push_back(new Diamond(x, y, width, height, color));
+}
+
 void Canvas::tryToSelectShape(float x, float y) {
+    // Deselect the currently selected shape if there is one
     if (selectedShape) {
         selectedShape->deselect();
         selectedShape = nullptr;
     }
-    
-    
-    for (size_t i = 0; i < shapes.size(); i++) {
-        if (shapes[i]->contains(x, y)) {
-            selectedShape = shapes[i];
+
+    // Iterate backwards so we select the shape visually on top
+    for (auto it = shapes.rbegin(); it != shapes.rend(); ++it) {
+        if ((*it)->contains(x, y)) {
+            selectedShape = *it;
             selectedShape->select();
-            break;
+            break; 
         }
     }
 }
@@ -44,24 +53,26 @@ void Canvas::tryToMoveSelectedShape(float x, float y) {
 }
 
 void Canvas::clear() {
-    for (size_t i = 0; i < points.size(); i++) {
-        delete points[i];
+    for (Point* p : points) {
+        delete p;
     }
     points.clear();
-    
-    for (size_t i = 0; i < shapes.size(); i++) {
-        delete shapes[i];
+
+    for (Shape* s : shapes) {
+        delete s;
     }
     shapes.clear();
+    
+    selectedShape = nullptr;
 }
 
 void Canvas::render() {
-    for (size_t i = 0; i < points.size(); i++) {
-        points[i]->draw();
+    for (Point* p : points) {
+        p->draw();
     }
-
-    for (size_t i = 0; i < shapes.size(); i++) {
-        shapes[i]->draw();
+    
+    for (Shape* s : shapes) {
+        s->draw();
     }
 }
 

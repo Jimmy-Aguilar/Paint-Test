@@ -10,9 +10,14 @@ class Toolbar : public bobcat::Group {
     bobcat::Image* mouseButton;
     bobcat::Image* circleButton;
     bobcat::Image* triangleButton;
-    bobcat::Image* rectangleButton;
-    bobcat::Image* undoButton;
+    bobcat::Image* pentagonButton;
+    
+    bobcat::Image* paintbrushButton;
     bobcat::Image* clearButton;
+    bobcat::Image* bringFrontButton;
+    bobcat::Image* bringBackButton;
+    bobcat::Image* rectangleButton;
+    bobcat::Image* diamondButton;
     
     TOOL selectedTool;
     ACTION action;

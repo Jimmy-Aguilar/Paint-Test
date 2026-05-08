@@ -2,22 +2,18 @@
 #define COLOR_SELECTOR_H
 
 #include <bobcat_ui/all.h>
+#include <FL/Fl_Value_Slider.H> // Included native FLTK slider
 #include <Enums.h>
 #include <Color.h>
 
 class ColorSelector : public bobcat::Group {
-    bobcat::Button* redButton;
-    bobcat::Button* orangeButton;
-    bobcat::Button* yellowButton;
-    bobcat::Button* greenButton;
-    bobcat::Button* blueButton;
-    bobcat::Button* indigoButton;
-    bobcat::Button* violetButton;
+    Fl_Value_Slider* redSlider;
+    Fl_Value_Slider* greenSlider;
+    Fl_Value_Slider* blueSlider;
+    bobcat::Button* previewBox;
 
-    COLOR selectedColor;
-    void onClick(bobcat::Widget* sender);
-    void visualizeSelectedColor() const;
-    void deselectAllColors() const;
+    // FLTK requires a static callback function, so we will pass the class instance as 'data'
+    static void onSliderChange(Fl_Widget* sender, void* data);
     
 public:
     ColorSelector(int x, int y, int w, int h);

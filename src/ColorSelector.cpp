@@ -3,138 +3,56 @@
 using namespace bobcat;
 
 ColorSelector::ColorSelector(int x, int y, int w, int h) : Group(x, y, w, h) {
-    redButton = new Button(x, y, 50, 50, "");
-    orangeButton = new Button(x + 50, y, 50, 50, "");
-    yellowButton = new Button(x + 100, y, 50, 50, "");
-    greenButton = new Button(x + 150, y, 50, 50, "");
-    blueButton = new Button(x + 200, y, 50, 50, "");
-    indigoButton = new Button(x + 250, y, 50, 50, "");
-    violetButton = new Button(x + 300, y, 50, 50, "");
+    redSlider = new Fl_Value_Slider(x + 20, y, 100, 20, "R");
+    redSlider->type(FL_HOR_NICE_SLIDER);
+    redSlider->bounds(0.0, 1.0);
+    redSlider->step(0.01); // Added safeguard against division by 0
+    redSlider->value(0.0);
+    redSlider->align(FL_ALIGN_LEFT);
+    
+    greenSlider = new Fl_Value_Slider(x + 20, y + 25, 100, 20, "G");
+    greenSlider->type(FL_HOR_NICE_SLIDER);
+    greenSlider->bounds(0.0, 1.0);
+    greenSlider->step(0.01); // Added safeguard against division by 0
+    greenSlider->value(0.0);
+    greenSlider->align(FL_ALIGN_LEFT);
 
-    redButton->color(fl_rgb_color(255, 0, 0));
-    orangeButton->color(fl_rgb_color(255, 127, 0));
-    yellowButton->color(fl_rgb_color(255, 255, 0));
-    greenButton->color(fl_rgb_color(0, 255, 0));
-    blueButton->color(fl_rgb_color(0, 0, 255));
-    indigoButton->color(fl_rgb_color(75, 0, 130));
-    violetButton->color(fl_rgb_color(148, 0, 211));
+    blueSlider = new Fl_Value_Slider(x + 20, y + 50, 100, 20, "B");
+    blueSlider->type(FL_HOR_NICE_SLIDER);
+    blueSlider->bounds(0.0, 1.0);
+    blueSlider->step(0.01); // Added safeguard against division by 0
+    blueSlider->value(0.0);
+    blueSlider->align(FL_ALIGN_LEFT);
 
-    redButton->labelcolor(FL_WHITE);
-    orangeButton->labelcolor(FL_WHITE);
-    yellowButton->labelcolor(FL_WHITE);
-    greenButton->labelcolor(FL_WHITE);
-    blueButton->labelcolor(FL_WHITE);
-    indigoButton->labelcolor(FL_WHITE);
-    violetButton->labelcolor(FL_WHITE);
+    previewBox = new Button(x + 140, y + 10, 50, 50, "");
+    previewBox->box(FL_FLAT_BOX);
 
-    ON_CLICK(redButton, ColorSelector::onClick);
-    ON_CLICK(orangeButton, ColorSelector::onClick);
-    ON_CLICK(yellowButton, ColorSelector::onClick);
-    ON_CLICK(greenButton, ColorSelector::onClick);
-    ON_CLICK(blueButton, ColorSelector::onClick);
-    ON_CLICK(indigoButton, ColorSelector::onClick);
-    ON_CLICK(violetButton, ColorSelector::onClick);
+    redSlider->callback(ColorSelector::onSliderChange, this);
+    greenSlider->callback(ColorSelector::onSliderChange, this);
+    blueSlider->callback(ColorSelector::onSliderChange, this);
 
-    selectedColor = RED;
-    visualizeSelectedColor();
+    ColorSelector::onSliderChange(redSlider, this);
 }
 
 Color ColorSelector::getSelectedColor() const {
-    Color color = {0, 0, 0};
-
-    if (selectedColor == RED) {
-        color = {255/255.0, 0/255.0, 0/255.0};
-    }
-    else if (selectedColor == ORANGE) {
-        color = {255/255.0, 127/255.0, 0/255.0};
-    }
-    else if (selectedColor == YELLOW) {
-        color = {255/255.0, 255/255.0, 0/255.0};
-    }
-    else if (selectedColor == GREEN) {
-        color = {0/255.0, 255/255.0, 0/255.0};
-    }
-    else if (selectedColor == BLUE) {
-        color = {0/255.0, 0/255.0, 255/255.0};
-    }
-    else if (selectedColor == INDIGO) {
-        color = {75/255.0, 0/255.0, 130/255.0};
-    }
-    else if (selectedColor == VIOLET) {
-        color = {148/255.0, 0/255.0, 211/255.0};
-    }
-
-    return color;
+    return { 
+        (float)redSlider->value(), 
+        (float)greenSlider->value(), 
+        (float)blueSlider->value() 
+    };
 }
 
-void ColorSelector::onClick(Widget* sender) {
-    deselectAllColors();
+void ColorSelector::onSliderChange(Fl_Widget* sender, void* data) {
+    ColorSelector* selector = (ColorSelector*)data;
+    Color c = selector->getSelectedColor();
     
-    if (sender == redButton) {
-        selectedColor = RED;
-    }
-    else if (sender == orangeButton) {
-        selectedColor = ORANGE;
-    }
-    else if (sender == yellowButton) {
-        selectedColor = YELLOW;
-    }
-    else if (sender == greenButton) {
-        selectedColor = GREEN;
-    }
-    else if (sender == blueButton) {
-        selectedColor = BLUE;
-    }
-    else if (sender == indigoButton) {
-        selectedColor = INDIGO;
-    }
-    else if (sender == violetButton) {
-        selectedColor = VIOLET;
-    }
-
-    visualizeSelectedColor();
-}
-
-void ColorSelector::visualizeSelectedColor() const {
-    if (selectedColor == RED) {
-        redButton->label("@+5square");
-    }
-    else if (selectedColor == ORANGE) {
-        orangeButton->label("@+5square");
-    }
-    else if (selectedColor == YELLOW) {
-        yellowButton->label("@+5square");
-    }
-    else if (selectedColor == GREEN) {
-        greenButton->label("@+5square");
-    }
-    else if (selectedColor == BLUE) {
-        blueButton->label("@+5square");
-    }
-    else if (selectedColor == INDIGO) {
-        indigoButton->label("@+5square");
-    }
-    else if (selectedColor == VIOLET) {
-        violetButton->label("@+5square");
-    }
-}
-
-void ColorSelector::deselectAllColors() const {
-    redButton->label("");
-    orangeButton->label("");
-    yellowButton->label("");
-    greenButton->label("");
-    blueButton->label("");
-    indigoButton->label("");
-    violetButton->label("");
+    selector->previewBox->color(fl_rgb_color(c.r * 255, c.g * 255, c.b * 255));
+    selector->redraw();
 }
 
 ColorSelector::~ColorSelector() {
-    delete redButton;
-    delete orangeButton;
-    delete yellowButton;
-    delete greenButton;
-    delete blueButton;
-    delete indigoButton;
-    delete violetButton;
+    delete redSlider;
+    delete greenSlider;
+    delete blueSlider;
+    delete previewBox;
 }
