@@ -38,7 +38,7 @@ void Canvas::tryToSelectShape(float x, float y) {
         if ((*it)->contains(x, y)) {
             selectedShape = *it;
             selectedShape->select();
-            break; 
+            break;
         }
     }
 }
@@ -51,38 +51,65 @@ void Canvas::tryToMoveSelectedShape(float x, float y) {
 }
 
 void Canvas::enlargeSelectedShape() {
-    if (selectedShape) {
-        selectedShape->resize(1.1f); // Grow by 10%
-    }
+    if (selectedShape) { selectedShape->resize(1.1f); }
 }
 
 void Canvas::minimizeSelectedShape() {
-    if (selectedShape) {
-        selectedShape->resize(0.9f); // Shrink by 10%
+    if (selectedShape) { selectedShape->resize(0.9f); }
+}
+
+// FIX: Move the selected shape to the end of the vector so it draws on top.
+void Canvas::bringSelectedToFront() {
+    if (!selectedShape) return;
+    auto it = std::find(shapes.begin(), shapes.end(), selectedShape);
+    if (it != shapes.end()) {
+        shapes.erase(it);
+        shapes.push_back(selectedShape);
     }
 }
 
-void Canvas::clear() {
-    for (Point* p : points) { delete p; }
-    points.clear();
+// FIX: Move the selected shape to the front of the vector so it draws behind everything.
+void Canvas::sendSelectedToBack() {
+    if (!selectedShape) return;
+    auto it = std::find(shapes.begin(), shapes.end(), selectedShape);
+    if (it != shapes.end()) {
+        shapes.erase(it);
+        shapes.insert(shapes.begin(), selectedShape);
+    }
+}
 
-    for (Shape* s : shapes) { delete s; }
+// FIX: Undo removes the last added shape and saves it so it can be restored.
+void Canvas::undo() {
+    if (shapes.empty()) return;
+    Shape* last = shapes.back();
+    if (last == selectedShape) {
+        last->deselect();
+        selectedShape = nullptr;
+    }
+    undoStack.push_back(last);
+    shapes.pop_back();
+}
+
+void Canvas::clear() {
+    for (Point* p : points)  { delete p; }
+    points.clear();
+    for (Shape* s : shapes)  { delete s; }
     shapes.clear();
-    
+    for (Shape* s : undoStack) { delete s; }
+    undoStack.clear();
     selectedShape = nullptr;
 }
 
 void Canvas::render() {
-    // FIX: Clears the background every frame to prevent trailing artifacts!
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    for (Point* p : points) {
-        p->draw();
-    }
-    for (Shape* s : shapes) {
-        s->draw();
-    }
+    for (Point* p : points) { p->draw(); }
+    for (Shape* s : shapes)  { s->draw(); }
+
+    // FIX: Flush the GL pipeline so FLTK composites a fully-rendered frame,
+    //      preventing the overlay glitch / flickering artifact.
+    glFlush();
 }
 
 Canvas::~Canvas() {

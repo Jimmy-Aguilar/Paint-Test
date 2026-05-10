@@ -21,13 +21,42 @@ void Triangle::draw() const {
 
     glBegin(GL_POLYGON);
         glVertex2f(x - base/2, y - height/2);
-        glVertex2f(x, y + height/2);
+        glVertex2f(x,           y + height/2);
         glVertex2f(x + base/2, y - height/2);
     glEnd();
+
+    // FIX: Draw a white inner triangle outline when selected to indicate selection.
+    if (isSelected) {
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glLineWidth(2.0f);
+        float s = 0.65f; // inner scale factor
+        glBegin(GL_LINE_LOOP);
+            glVertex2f(x - (base * s)/2, y - (height * s)/2);
+            glVertex2f(x,                 y + (height * s)/2);
+            glVertex2f(x + (base * s)/2, y - (height * s)/2);
+        glEnd();
+        glLineWidth(1.0f);
+    }
 }
 
+// FIX: Properly implement point-in-triangle test using the cross-product sign method
+//      (was always returning false, which broke selection, resize, and drag).
 bool Triangle::contains(float _x, float _y) const {
-    return false;
+    // The three vertices of the triangle as drawn in draw()
+    float x1 = x - base/2,  y1 = y - height/2;
+    float x2 = x,            y2 = y + height/2;
+    float x3 = x + base/2,  y3 = y - height/2;
+
+    // Cross-product sign test: all three cross-products must have the same sign
+    // for the point to be inside the triangle.
+    float d1 = (_x - x2) * (y1 - y2) - (x1 - x2) * (_y - y2);
+    float d2 = (_x - x3) * (y2 - y3) - (x2 - x3) * (_y - y3);
+    float d3 = (_x - x1) * (y3 - y1) - (x3 - x1) * (_y - y1);
+
+    bool has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
+    bool has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
+
+    return !(has_neg && has_pos);
 }
 
 float Triangle::getBase() const {
@@ -44,7 +73,7 @@ void Triangle::setHeight(float _height) {
 }
 
 void Triangle::resize(float factor) {
-    base *= factor;
+    base   *= factor;
     height *= factor;
 }
 

@@ -10,11 +10,14 @@
 #include <Diamond.h>
 #include <Shape.h>
 #include <vector>
+#include <algorithm>
 
 class Canvas : public bobcat::Canvas_ {
     std::vector<Point*> points;
     std::vector<Shape*> shapes;
     Shape* selectedShape;
+
+    std::vector<Shape*> undoStack;
 
 public:
     Canvas(int x, int y, int w, int h);
@@ -29,10 +32,12 @@ public:
     void tryToSelectShape(float x, float y);
     void tryToMoveSelectedShape(float x, float y);
     
-    // New resize wrappers
     void enlargeSelectedShape();
     void minimizeSelectedShape();
-    
+    void bringSelectedToFront();
+    void sendSelectedToBack();
+    void undo();
+
     void clear();
     void render();
 
