@@ -7,35 +7,16 @@ Shape::Shape() {
     isSelected = false;
 }
 
-float Shape::getX() const {
-    return x;
-}
-float Shape::getY() const {
-    return y;
-}
-Color Shape::getColor() const {
-    return color;
-}
-bool Shape::getIsSelected() const {
-    return isSelected;
-}
+float Shape::getX() const { return x; }
+float Shape::getY() const { return y; }
+void Shape::setX(float _x) { x = _x; }
+void Shape::setY(float _y) { y = _y; }
 
-void Shape::setX(float _x) {
-    x = _x;
-}
-void Shape::setY(float _y) {
-    y = _y;
-}
-void Shape::setColor(Color _color) {
-    color = _color;
-}
-void Shape::select() {
-    isSelected = true;
-}
-void Shape::deselect() {
-    isSelected = false;
-}
+void Shape::select() { isSelected = true; }
+void Shape::deselect() { isSelected = false; }
+bool Shape::getIsSelected() const { return isSelected; }
 
-Shape::~Shape() {
-    //
-}
+void Shape::setColor(Color c) { color = c; }
+Color Shape::getColor() const { return color; }
+
+Shape::~Shape() {}

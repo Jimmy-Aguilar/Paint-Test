@@ -52,6 +52,11 @@ void Rectangle::setHeight(float _height) {
     height = _height;
 }
 
+void Rectangle::resize(float factor) {
+    width *= factor;
+    height *= factor;
+}
+
 Rectangle::~Rectangle() {
     //
 }

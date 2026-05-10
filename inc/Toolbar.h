@@ -8,16 +8,20 @@ class Toolbar : public bobcat::Group {
     bobcat::Image* pencilButton;
     bobcat::Image* eraserButton;
     bobcat::Image* mouseButton;
+    bobcat::Image* clearButton;
+    bobcat::Image* undoButton;
+    
     bobcat::Image* circleButton;
     bobcat::Image* triangleButton;
+    bobcat::Image* rectangleButton;
     bobcat::Image* pentagonButton;
+    bobcat::Image* diamondButton;
     
-    bobcat::Image* paintbrushButton;
-    bobcat::Image* clearButton;
     bobcat::Image* bringFrontButton;
     bobcat::Image* bringBackButton;
-    bobcat::Image* rectangleButton;
-    bobcat::Image* diamondButton;
+    
+    bobcat::Image* plusButton;
+    bobcat::Image* minusButton;
     
     TOOL selectedTool;
     ACTION action;

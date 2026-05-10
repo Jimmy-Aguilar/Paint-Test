@@ -43,6 +43,11 @@ void Triangle::setHeight(float _height) {
     height = _height;
 }
 
+void Triangle::resize(float factor) {
+    base *= factor;
+    height *= factor;
+}
+
 Triangle::~Triangle() {
     //
 }

@@ -1,4 +1,5 @@
 #include <Canvas.h>
+#include <GL/freeglut.h>
 
 Canvas::Canvas(int x, int y, int w, int h) : bobcat::Canvas_(x, y, w, h) {
     selectedShape = nullptr;
@@ -29,13 +30,10 @@ void Canvas::addDiamond(float x, float y, float width, float height, Color color
 }
 
 void Canvas::tryToSelectShape(float x, float y) {
-    // Deselect the currently selected shape if there is one
     if (selectedShape) {
         selectedShape->deselect();
         selectedShape = nullptr;
     }
-
-    // Iterate backwards so we select the shape visually on top
     for (auto it = shapes.rbegin(); it != shapes.rend(); ++it) {
         if ((*it)->contains(x, y)) {
             selectedShape = *it;
@@ -52,25 +50,36 @@ void Canvas::tryToMoveSelectedShape(float x, float y) {
     }
 }
 
-void Canvas::clear() {
-    for (Point* p : points) {
-        delete p;
+void Canvas::enlargeSelectedShape() {
+    if (selectedShape) {
+        selectedShape->resize(1.1f); // Grow by 10%
     }
+}
+
+void Canvas::minimizeSelectedShape() {
+    if (selectedShape) {
+        selectedShape->resize(0.9f); // Shrink by 10%
+    }
+}
+
+void Canvas::clear() {
+    for (Point* p : points) { delete p; }
     points.clear();
 
-    for (Shape* s : shapes) {
-        delete s;
-    }
+    for (Shape* s : shapes) { delete s; }
     shapes.clear();
     
     selectedShape = nullptr;
 }
 
 void Canvas::render() {
+    // FIX: Clears the background every frame to prevent trailing artifacts!
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     for (Point* p : points) {
         p->draw();
     }
-    
     for (Shape* s : shapes) {
         s->draw();
     }

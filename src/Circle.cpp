@@ -36,6 +36,10 @@ void Circle::setRadius(float _radius) {
     radius = _radius;
 }
 
+void Circle::resize(float factor) {
+    radius *= factor;
+}
+
 Circle::~Circle() {
-    //
+    
 }

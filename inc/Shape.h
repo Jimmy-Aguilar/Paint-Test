@@ -9,23 +9,25 @@ protected:
     float y;
     Color color;
     bool isSelected;
-    
+
 public:
     Shape();
+    
+    virtual void draw() const = 0;
+    virtual bool contains(float _x, float _y) const = 0;
+    virtual void resize(float factor) = 0; // New resizing method
 
     float getX() const;
     float getY() const;
-    Color getColor() const;
-    bool getIsSelected() const;
-
-    virtual void draw() const = 0;
-    virtual bool contains(float _x, float _y) const = 0;
-
     void setX(float _x);
     void setY(float _y);
-    void setColor(Color _color);
+
     void select();
     void deselect();
+    bool getIsSelected() const;
+
+    void setColor(Color c);
+    Color getColor() const;
 
     virtual ~Shape();
 };

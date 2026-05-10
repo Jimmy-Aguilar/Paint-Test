@@ -23,15 +23,17 @@ public:
     void addCircle(float x, float y, float radius, Color color);
     void addTriangle(float x, float y, float base, float height, Color color);
     void addRectangle(float x, float y, float width, float height, Color color);
-    
-    // New shape methods
     void addPentagon(float x, float y, float radius, Color color);
     void addDiamond(float x, float y, float width, float height, Color color);
     
     void tryToSelectShape(float x, float y);
     void tryToMoveSelectedShape(float x, float y);
+    
+    // New resize wrappers
+    void enlargeSelectedShape();
+    void minimizeSelectedShape();
+    
     void clear();
-
     void render();
 
     ~Canvas();

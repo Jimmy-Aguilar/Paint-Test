@@ -31,6 +31,11 @@ void Diamond::draw() const {
     }
 }
 
+void Diamond::resize(float factor) {
+    width *= factor;
+    height *= factor;
+}
+
 bool Diamond::contains(float _x, float _y) const {
     return (_x >= x - width/2 && _x <= x + width/2 &&
             _y >= y - height/2 && _y <= y + height/2);

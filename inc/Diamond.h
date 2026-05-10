@@ -12,6 +12,8 @@ public:
     void draw() const override;
     bool contains(float _x, float _y) const override;
 
+    void resize(float factor) override;
+
     // Added the destructor declaration here!
     ~Diamond(); 
 };

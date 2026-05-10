@@ -11,28 +11,28 @@ Pentagon::Pentagon(float _x, float _y, float r, Color c) {
 }
 
 void Pentagon::draw() const {
-    // Set the color for the pentagon
     glColor3f(color.r, color.g, color.b);
-    
-    // Draw the solid pentagon
     glBegin(GL_POLYGON);
     for (int i = 0; i < 5; ++i) {
-        // Calculate the vertices for a regular pentagon pointing upwards
-        float angle = i * 2.0 * M_PI / 5.0 - M_PI / 2.0;
+        // FIXED: Changed - M_PI / 2.0 to + M_PI / 2.0 to face upwards
+        float angle = i * 2.0 * M_PI / 5.0 + M_PI / 2.0;
         glVertex2f(x + radius * cos(angle), y + radius * sin(angle));
     }
     glEnd();
 
-    // Draw a white outline if the shape is selected
     if (isSelected) {
-        glColor3f(1.0f, 1.0f, 1.0f); // White
+        glColor3f(1.0f, 1.0f, 1.0f);
         glBegin(GL_LINE_LOOP);
         for (int i = 0; i < 5; ++i) {
-            float angle = i * 2.0 * M_PI / 5.0 - M_PI / 2.0;
+            float angle = i * 2.0 * M_PI / 5.0 + M_PI / 2.0;
             glVertex2f(x + radius * cos(angle), y + radius * sin(angle));
         }
         glEnd();
     }
+}
+
+void Pentagon::resize(float factor) {
+    radius *= factor;
 }
 
 bool Pentagon::contains(float _x, float _y) const {

@@ -20,6 +20,8 @@ public:
 
     void setBase(float _base);
     void setHeight(float _height);
+    
+    void resize(float factor) override;
 
     ~Triangle();
 };

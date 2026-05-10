@@ -21,6 +21,8 @@ public:
     void setWidth(float _width);
     void setHeight(float _height);
 
+    void resize(float factor) override;
+
     ~Rectangle();
 };
 
