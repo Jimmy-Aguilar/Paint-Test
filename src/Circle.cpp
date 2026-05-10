@@ -24,7 +24,6 @@ void Circle::draw() const {
         }
     glEnd();
 
-    // FIX: Draw a white ring outline when selected to indicate selection.
     if (isSelected) {
         glColor3f(1.0f, 1.0f, 1.0f);
         glLineWidth(2.0f);
@@ -39,7 +38,6 @@ void Circle::draw() const {
     }
 }
 
-// FIX: Properly implement point-in-circle test (was always returning false).
 bool Circle::contains(float _x, float _y) const {
     float dx = _x - x;
     float dy = _y - y;

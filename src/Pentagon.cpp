@@ -14,7 +14,6 @@ void Pentagon::draw() const {
     glColor3f(color.r, color.g, color.b);
     glBegin(GL_POLYGON);
     for (int i = 0; i < 5; ++i) {
-        // FIXED: Changed - M_PI / 2.0 to + M_PI / 2.0 to face upwards
         float angle = i * 2.0 * M_PI / 5.0 + M_PI / 2.0;
         glVertex2f(x + radius * cos(angle), y + radius * sin(angle));
     }
@@ -36,7 +35,6 @@ void Pentagon::resize(float factor) {
 }
 
 bool Pentagon::contains(float _x, float _y) const {
-    // Basic bounding box check using the radius
     return (_x >= x - radius && _x <= x + radius &&
             _y >= y - radius && _y <= y + radius);
 }

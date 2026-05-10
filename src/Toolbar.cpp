@@ -3,25 +3,18 @@
 using namespace bobcat;
 
 Toolbar::Toolbar(int x, int y, int w, int h) : Group(x, y, w, h) {
-    // Row 1
     pencilButton    = new Image(x,      y,       50, 50, "./assets/pencil.png");
     eraserButton    = new Image(x + 50, y,       50, 50, "./assets/eraser.png");
-    // Row 2
     mouseButton     = new Image(x,      y + 50,  50, 50, "./assets/mouse.png");
     clearButton     = new Image(x + 50, y + 50,  50, 50, "./assets/clear.png");
-    // Row 3
     undoButton      = new Image(x,      y + 100, 50, 50, "./assets/undo.png");
     circleButton    = new Image(x + 50, y + 100, 50, 50, "./assets/circle.png");
-    // Row 4
     triangleButton  = new Image(x,      y + 150, 50, 50, "./assets/triangle.png");
     rectangleButton = new Image(x + 50, y + 150, 50, 50, "./assets/rectangle.png");
-    // Row 5
     pentagonButton  = new Image(x,      y + 200, 50, 50, "./assets/pentagon.png");
     diamondButton   = new Image(x + 50, y + 200, 50, 50, "./assets/diamond.png");
-    // Row 6
     plusButton      = new Image(x,      y + 250, 50, 50, "./assets/plus.png");
     minusButton     = new Image(x + 50, y + 250, 50, 50, "./assets/minus.png");
-    // Row 7
     bringFrontButton= new Image(x,      y + 300, 50, 50, "./assets/front.png");
     bringBackButton = new Image(x + 50, y + 300, 50, 50, "./assets/back.png");
 

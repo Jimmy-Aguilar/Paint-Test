@@ -14,7 +14,6 @@ public:
 
     void resize(float factor) override;
 
-    // Added the destructor declaration here!
     ~Diamond(); 
 };
 

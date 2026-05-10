@@ -14,14 +14,14 @@ void Diamond::draw() const {
     glColor3f(color.r, color.g, color.b);
     
     glBegin(GL_POLYGON);
-        glVertex2f(x, y - height / 2);         // Top vertex
-        glVertex2f(x + width / 2, y);          // Right vertex
-        glVertex2f(x, y + height / 2);         // Bottom vertex
-        glVertex2f(x - width / 2, y);          // Left vertex
+        glVertex2f(x, y - height / 2);         
+        glVertex2f(x + width / 2, y);      
+        glVertex2f(x, y + height / 2);  
+        glVertex2f(x - width / 2, y);     
     glEnd();
 
     if (isSelected) {
-        glColor3f(1.0f, 1.0f, 1.0f); // White
+        glColor3f(1.0f, 1.0f, 1.0f);
         glBegin(GL_LINE_LOOP);
             glVertex2f(x, y - height / 2);
             glVertex2f(x + width / 2, y);

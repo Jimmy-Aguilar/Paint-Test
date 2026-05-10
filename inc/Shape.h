@@ -15,12 +15,13 @@ public:
     
     virtual void draw() const = 0;
     virtual bool contains(float _x, float _y) const = 0;
-    virtual void resize(float factor) = 0; // New resizing method
+    virtual void resize(float factor) = 0;
 
     float getX() const;
     float getY() const;
-    void setX(float _x);
-    void setY(float _y);
+
+    virtual void setX(float _x);
+    virtual void setY(float _y);
 
     void select();
     void deselect();

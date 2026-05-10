@@ -3,8 +3,7 @@
 using namespace bobcat;
 
 Application::Application() {
-    window = new Window(25, 75, 450, 450, "Bobcat UI - Paint Application");
-
+    window        = new Window(25, 75, 450, 450, "Paint Application");
     canvas        = new Canvas(100, 0, 350, 350);
     toolbar       = new Toolbar(0, 0, 100, 450);
     colorSelector = new ColorSelector(100, 350, 350, 100);
@@ -14,18 +13,21 @@ Application::Application() {
     window->add(colorSelector);
 
     ON_MOUSE_DOWN(canvas, Application::onCanvasMouseDown);
-    ON_DRAG(canvas, Application::onCanvasMouseDrag);
-    ON_CHANGE(toolbar, Application::onToolbarChange);
-
+    ON_DRAG      (canvas, Application::onCanvasMouseDrag);
+    ON_MOUSE_UP  (canvas, Application::onCanvasMouseUp);   
+    
+    ON_CHANGE    (toolbar,       Application::onToolbarChange);
+    ON_CHANGE    (colorSelector, Application::onColorChange); 
     window->show();
 }
+
 
 void Application::onCanvasMouseDown(bobcat::Widget* sender, float x, float y) {
     Color color = colorSelector->getSelectedColor();
     TOOL  tool  = toolbar->getSelectedTool();
-    
-    if      (tool == PENCIL)    { canvas->addPoint(x, y, color); }
-    else if (tool == ERASER)    { canvas->addPoint(x, y, {1.0f, 1.0f, 1.0f}); }
+
+    if      (tool == PENCIL)    { canvas->beginScribble(x, y, color); }
+    else if (tool == ERASER)    { canvas->beginScribble(x, y, {1.0f, 1.0f, 1.0f}); }
     else if (tool == CIRCLE)    { canvas->addCircle(x, y, 0.1f, color); }
     else if (tool == TRIANGLE)  { canvas->addTriangle(x, y, 0.2f, 0.2f, color); }
     else if (tool == RECTANGLE) { canvas->addRectangle(x, y, 0.2f, 0.2f, color); }
@@ -36,6 +38,26 @@ void Application::onCanvasMouseDown(bobcat::Widget* sender, float x, float y) {
     canvas->redraw();
 }
 
+
+void Application::onCanvasMouseDrag(bobcat::Widget* sender, float x, float y) {
+    TOOL tool = toolbar->getSelectedTool();
+
+    if      (tool == PENCIL) { canvas->continueScribble(x, y); }
+    else if (tool == ERASER) { canvas->continueScribble(x, y); }
+    else if (tool == MOUSE)  { canvas->tryToMoveSelectedShape(x, y); }
+
+    canvas->redraw();
+}
+
+
+void Application::onCanvasMouseUp(bobcat::Widget* sender, float x, float y) {
+    if (toolbar->getSelectedTool() == PENCIL || toolbar->getSelectedTool() == ERASER) {
+        canvas->endScribble();
+        canvas->redraw();
+    }
+}
+
+
 void Application::onToolbarChange(bobcat::Widget* sender) {
     ACTION action = toolbar->getAction();
     TOOL   tool   = toolbar->getSelectedTool();
@@ -44,22 +66,15 @@ void Application::onToolbarChange(bobcat::Widget* sender) {
     else if (action == ENLARGE)  { canvas->enlargeSelectedShape(); }
     else if (action == MINIMIZE) { canvas->minimizeSelectedShape(); }
     else if (action == UNDO)     { canvas->undo(); }
-    // FIX: BRING_FRONT and BRING_BACK are stored as selectedTool in the
-    //      original Toolbar, so check the tool here to dispatch them.
     else if (tool   == BRING_FRONT) { canvas->bringSelectedToFront(); }
     else if (tool   == BRING_BACK)  { canvas->sendSelectedToBack(); }
 
     canvas->redraw();
 }
 
-void Application::onCanvasMouseDrag(bobcat::Widget* sender, float x, float y) {
-    Color color = colorSelector->getSelectedColor();
-    TOOL  tool  = toolbar->getSelectedTool();
-    
-    if      (tool == PENCIL) { canvas->addPoint(x, y, color); }
-    else if (tool == ERASER) { canvas->addPoint(x, y, {1.0f, 1.0f, 1.0f}); }
-    else if (tool == MOUSE)  { canvas->tryToMoveSelectedShape(x, y); }
 
+void Application::onColorChange(bobcat::Widget* sender) {
+    canvas->changeSelectedColor(colorSelector->getSelectedColor());
     canvas->redraw();
 }
 
